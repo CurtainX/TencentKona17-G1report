@@ -148,7 +148,7 @@ java -XX:+UseG1GC -Xms512m -Xmx512m -Xlog:gc*:file=gc.log:time,level,tags TestGC
 
 #### 2)关键性能指标
 
-![]()
+![关键性能指标](图片2.jpg)
 
 G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 
