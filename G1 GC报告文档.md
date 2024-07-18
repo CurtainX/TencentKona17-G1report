@@ -139,7 +139,7 @@ java -XX:+UseG1GC -Xms512m -Xmx512m -Xlog:gc*:file=G1GC.log:time,level,tags Test
 
 ### GC日志解析
 
-测试代码一共生成了22425个对象，整个GC日志超过7千行，GC日志中一部分内容（即第十次GC的内容）含义如下：
+测试代码一共生成了22425个对象，[整个GC日志](G1GC.log)超过7千行，GC日志中一部分内容（即第十次GC的内容）含义如下：
 1. 开始和配置：
     - GC(10) Pause Young (Prepare Mixed) (G1 Evacuation Pause)表示这是第10次垃圾回收，类型为混合回收，在垃圾回收处理时不仅对年轻代回收，也会对一部分老年代进行回收。
     - Using 12 workers of 13 for evacuation表示使用了13个可用线程中的12个来执行这次垃圾回收。
@@ -218,7 +218,7 @@ G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 
 ![](figure5.bmp)
 
-通过设置以下参数，在同样的代码下，能够将用于垃圾回收的CPU时间缩短至780ms。
+通过设置以下参数，在同样的代码下，能够将用于垃圾回收的CPU时间缩短至780ms,[优化后GC日志](G1MaxMillsSetGC.log)已上传至文件。
 
 ```
 java -XX:+UseG1GC -XX:G1HeapRegionSize=1m -XX:MaxGCPauseMillis=100 -Xms512m -Xmx512m -Xlog:gc*:file=G1MaxMillsSetGC.log:time,level,tags TestGC
