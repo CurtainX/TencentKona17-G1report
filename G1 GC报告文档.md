@@ -86,11 +86,6 @@ public class TestGC {
             if (randomIndex < cacheSize) {
                 cachedGarbage[randomIndex] = garbage;
             }
-
-            //执行System.gc()来鼓励G1 GC进行mixed collection
-            if(counter.longValue() % 100 == 0){
-                System.gc();
-            }
         }
 
         System.out.println("执行结束!共生成对象次数:" + counter.longValue());
@@ -100,6 +95,19 @@ public class TestGC {
 ```
 
 ## 运行参数与GC日志分析
+
+### 测试环境
+#### 硬件配置：
+- CPU:	AMD Ryzen 7 8845HS w/ Radeon 780M Graphics，3801 Mhz，8 个内核，16 个逻辑处理器
+- 内存：24GB DDR4
+- 硬盘：1TB SSD
+
+#### 软件配置
+- 操作系统：Microsoft Windows 11,64-bit
+- JDK版本：
+  - OpenJDK version "17.0.11" 2024-04-16 LTS
+  - OpenJDK Runtime Environment TencentKonaJDK (build 17.0.11+1-LTS)
+  - OpenJDK 64-Bit Server VM TencentKonaJDK (build 17.0.11+1-LTS, mixed mode, sharing)
 
 ### 运行参数
 
