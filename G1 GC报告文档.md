@@ -112,7 +112,7 @@ public class TestGC {
 ### 运行参数
 
 ```
-java -XX:+UseG1GC -Xms512m -Xmx512m -Xlog:gc*:file=gc.log:time,level,tags TestGC
+java -XX:+UseG1GC -Xms512m -Xmx512m -Xlog:gc*:file=G1GC.log:time,level,tags TestGC
 ```
 
 ### GC日志内容
@@ -120,29 +120,49 @@ java -XX:+UseG1GC -Xms512m -Xmx512m -Xlog:gc*:file=gc.log:time,level,tags TestGC
 部分GC日志内容如下所示：
 
 ```
-[info][gc,task        ] GC(10) Using 12 workers of 13 for full compaction
-[info][gc,start       ] GC(10) Pause Full (System.gc())
-[info][gc,phases,start] GC(10) Phase 1: Mark live objects
-[info][gc,phases      ] GC(10) Phase 1: Mark live objects 0.380ms
-[info][gc,phases,start] GC(10) Phase 2: Prepare for compaction
-[info][gc,phases      ] GC(10) Phase 2: Prepare for compaction 0.107ms
-[info][gc,phases,start] GC(10) Phase 3: Adjust pointers
-[info][gc,phases      ] GC(10) Phase 3: Adjust pointers 0.154ms
-[info][gc,phases,start] GC(10) Phase 4: Compact heap
-[info][gc,phases      ] GC(10) Phase 4: Compact heap 0.711ms
-[info][gc,heap        ] GC(10) Eden regions: 15->0(25)
-[info][gc,heap        ] GC(10) Survivor regions: 0->0(0)
-[info][gc,heap        ] GC(10) Old regions: 55->59
-[info][gc,heap        ] GC(10) Archive regions: 0->0
-[info][gc,heap        ] GC(10) Humongous regions: 55->46
-[info][gc,metaspace   ] GC(10) Metaspace: 197K(384K)->197K(384K) NonClass: 190K(256K)->190K(256K) Class: 7K(128K)->7K(128K)
-[info][gc             ] GC(10) Pause Full (System.gc()) 116M->98M(512M) 1.922ms
-[info][gc,cpu         ] GC(10) User=0.00s Sys=0.00s Real=0.00s
+[info][gc,start    ] GC(10) Pause Young (Prepare Mixed) (G1 Evacuation Pause)
+[info][gc,task     ] GC(10) Using 12 workers of 13 for evacuation
+[info][gc,phases   ] GC(10)   Pre Evacuate Collection Set: 0.1ms
+[info][gc,phases   ] GC(10)   Merge Heap Roots: 0.1ms
+[info][gc,phases   ] GC(10)   Evacuate Collection Set: 4.6ms
+[info][gc,phases   ] GC(10)   Post Evacuate Collection Set: 0.2ms
+[info][gc,phases   ] GC(10)   Other: 0.1ms
+[info][gc,heap     ] GC(10) Eden regions: 97->0(10)
+[info][gc,heap     ] GC(10) Survivor regions: 16->15(15)
+[info][gc,heap     ] GC(10) Old regions: 153->192
+[info][gc,heap     ] GC(10) Archive regions: 0->0
+[info][gc,heap     ] GC(10) Humongous regions: 140->96
+[info][gc,metaspace] GC(10) Metaspace: 194K(384K)->194K(384K) NonClass: 186K(256K)->186K(256K) Class: 7K(128K)->7K(128K)
+[info][gc          ] GC(10) Pause Young (Prepare Mixed) (G1 Evacuation Pause) 405M->302M(512M) 5.161ms
+[info][gc,cpu      ] GC(10) User=0.00s Sys=0.00s Real=0.00s
 ```
 
 ### GC日志解析
 
-测试代码一共生成了12000个对象，整个GC日志超过6千行，所以此处使用GCEasy工具堆日志进行分析。
+测试代码一共生成了22425个对象，整个GC日志超过7千行，GC日志中一部分内容（即第十次GC的内容）含义如下：
+1. 开始和配置：
+  - GC(10) Pause Young (Prepare Mixed) (G1 Evacuation Pause)表示这是第10次垃圾回收，类型为混合回收，在垃圾回收处理时不仅对年轻代回收，也会对一部分老年代进行回收。
+  - Using 12 workers of 13 for evacuation表示使用了13个可用线程中的12个来执行这次垃圾回收。
+2. 垃圾收集阶段：
+  - Pre Evacuate Collection Set: 0.1ms 表示预疏离阶段耗时0.1毫秒。
+  - Merge Heap Roots: 0.1ms 表示合并堆根阶段耗时0.1毫秒。
+  - Evacuate Collection Set: 4.6ms 表示清理耗时4.6毫秒。
+  - Post Evacuate Collection Set: 0.2ms 表示后续清理耗时0.2毫秒。
+  - Other: 0.1ms 表示其他相关活动耗时0.1毫秒。
+3. 堆状态变化：
+  - Eden regions: 97->0(10) 表示Eden区从97个区域减少到0个，预计下次将分配10个区域。
+  - Survivor regions: 16->15(15) 表示Survivor区域从16个减少到15个，预计维持15个区域。
+  - Old regions: 153->192 表示老年代区域从153个增加到192个。
+  - Humongous regions: 140->96 表示Humongous区域从140个减少到96个。
+4. 元空间：
+  - Metaspace: 194K(384K)->194K(384K) 表示元空间使用量和配置上限保持不变，194K，总容量384K。
+  - NonClass: 186K(256K)->186K(256K) 表示非类空间使用量和配置上限保持不变，186K，总容量256K。
+  - Class: 7K(128K)->7K(128K) 表示类空间使用量和上限保持不变，7K，总容量128K。
+5. 总结：
+  - Pause Young (Prepare Mixed) (G1 Evacuation Pause) 405M->302M(512M) 5.161ms 总体来看，垃圾回收将空间占用从405M减少到302M，总堆容量为512M，总耗时5.161毫秒。
+  - User=0.00s Sys=0.00s Real=0.00s 表示这次收集几乎没有占用额外的CPU资源。
+
+后续分析将使用GCEasy工具对日志整体进行分析。
 
 #### 1)内存空间分配与使用情况
 
