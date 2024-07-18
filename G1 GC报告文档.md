@@ -210,7 +210,7 @@ G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 
 - Young GC年轻代GC，只清理年轻代的Eden区和Survivor区，主要目的是尽早清理掉那些短期存活的对象，减少它们进入老年代的机会，从而延缓老年代的Full GC发生。
 
-- 全堆GC Full GC，尽管G1已经尽可能想减少Full GC的发生，但有时仍然需要进行全堆的垃圾回收，而G1 GC中，并不像传统的回收方式那样简单地在全堆上进行回收，而是采用Mixed GC的方式，根据global concurrent marking统计得出收益最高的若干old区中的Region，在用户指定的开销目标范围内尽可能地选择收益高的old区Region。当然，如果Mixed GC无法跟上程序分配内存的速度，导致Old区填满无法分配时，JVM会切换到G1之外的Serial Old GC来收集整个Java堆，上图中大量的Full GC开销可能存在这种切换的情况，所以Full GC的时间相对于其他开销来说要长很多。
+- 全堆GC Full GC，尽管G1已经尽可能想减少Full GC的发生，但有时仍然需要进行全堆的垃圾回收，而G1 GC中，并不像传统的回收方式那样简单地在全堆上进行回收，而是采用Mixed GC的方式，根据global concurrent marking统计得出收益最高的若干old区中的Region，在用户指定的开销目标范围内尽可能地选择收益高的old区Region。当然，如果Mixed GC无法跟上程序分配内存的速度，导致Old区填满无法分配时，JVM会隐式调用的mark-sweep-compact算法来收集整个Java堆，上图中大量的Full GC开销可能存在这种切换的情况，所以Full GC的时间相对于其他开销来说要长很多。
 
 ## 通过修改JVM参数达成较小GC延迟
 
