@@ -186,9 +186,9 @@ G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 
 - 2> 混合回收：G1引入了Mixed GC的概念，即在全堆回收(Full GC)时，同时清理年轻代和部分老年代的区域，这种策略虽然能减少全堆回收的停顿时间，但在选择部分老年代时会引入额外的成本。
 
-其次，垃圾回收的CPU消耗时间为1 sec 300 ms，相比于Parallel GC，其CPU消耗时间在相同程序下，是2 sec 120 ms[有待修改]，G1 GC的优势显著。
+其次，垃圾回收的CPU消耗时间为1 sec 300 ms，相比于Parallel GC，其CPU消耗时间在相同程序下，是2 sec 50 ms，G1 GC的优势显著。
 
-而后，延迟Latency的情况，平均的Stop The World(STW)的延迟时间为1.53ms，最大STW的延迟时间为20ms。相比于Parallel GC达到7.61ms[有待修改]的平均延迟时间和30ms[有待修改]的最大延迟时间来说，G1 GC的提高非常显著。
+而后，延迟Latency的情况，平均的Stop The World(STW)的延迟时间为1.53ms，最大STW的延迟时间为20ms。相比于Parallel GC达到14.7ms的平均延迟时间和40ms的最大延迟时间来说，G1 GC的提高非常显著。（注：以上对比的[Parallel日志](figure1.bmp)文件也已上传于文件中）
 
 ![](figure3.bmp)
 
