@@ -188,7 +188,7 @@ G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 
 其次，垃圾回收的CPU消耗时间为1 sec 300 ms，相比于Parallel GC，其CPU消耗时间在相同程序下，是2 sec 50 ms，G1 GC的优势显著。
 
-而后，延迟Latency的情况，平均的Stop The World(STW)的延迟时间为1.53ms，最大STW的延迟时间为20ms。相比于Parallel GC达到14.7ms的平均延迟时间和40ms的最大延迟时间来说，G1 GC的提高非常显著。（注：以上对比的[Parallel日志](figure1.bmp)文件也已上传于文件中）
+而后，延迟Latency的情况，平均的Stop The World(STW)的延迟时间为1.53ms，最大STW的延迟时间为20ms。相比于Parallel GC达到14.7ms的平均延迟时间和40ms的最大延迟时间来说，G1 GC的提高非常显著。（注：以上对比的[Parallel日志文件](ParallelGC.log)也已上传于文件中）
 
 ![](figure3.bmp)
 
