@@ -224,6 +224,6 @@ G1 GC在上述实验程序中的各项重要性能指标如上图所示。
 java -XX:+UseG1GC -XX:G1HeapRegionSize=1m -XX:MaxGCPauseMillis=100 -Xms512m -Xmx512m -Xlog:gc*:file=G1MaxMillsSetGC.log:time,level,tags TestGC
 ```
 
-在这个参数中，通过设置Region的大小为1m，以及设定期望的预期停顿时间为100ms，能够将原本的总共回收开销CPU的640ms降低至780ms，平均回收时间和最大回收时间基本不变。
+在这个参数中，通过设置Region的大小为1m，以及设定期望的预期停顿时间为100ms，能够将原本的总共回收开销CPU的640ms降低至780ms，平均回收时间从1.53ms降低至1.31ms，最大回收时间基本不变。
 
 但需要注意的是，不能将-XX:MaxGCPauseMillis设置的太低，设置的太低会导致G1垃圾回收跟不上对象的分配，导致垃圾堆积，最终引发Full GC。
